@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tic Tac Toe — Created with AI</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:#f7f7f9; color:#111; display:flex; align-items:center; justify-content:center; min-height:100vh; margin:0; }
+    .container { width:360px; max-width:94vw; background:#fff; padding:18px; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,0.08); text-align:center;}
+    h1 { font-size:18px; margin:0 0 6px 0; }
+    p.link { font-size:12px; margin:6px 0 14px 0; color:#444; word-break:break-all; }
+    .board { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:12px 0; }
+    .cell { background:#f1f3f5; aspect-ratio:1/1; display:flex; align-items:center; justify-content:center; font-size:42px; cursor:pointer; border-radius:8px; user-select:none; transition:transform .08s ease; }
+    .cell:active { transform:scale(.98); }
+    .info { margin:8px 0; font-size:14px; min-height:20px; }
+    button { background:#2563eb; color:#fff; border:none; padding:8px 12px; border-radius:8px; cursor:pointer; }
+    button.secondary { background:#e6e6e6; color:#111; margin-left:8px; }
+    footer { margin-top:12px; font-size:12px; color:#666; }
+    a.proof { color:#0b5ed7; text-decoration:none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎮 Tic Tac Toe (2 Players)</h1>
+    <p class="link">Created with AI — proof link:<br><a class="proof" href="https://chatgpt.com/share/68c8dae6-3614-8013-b2b0-c0b25ed47f84" target="_blank">https://chatgpt.com/share/68c8dae6-3614-8013-b2b0-c0b25ed47f84</a></p>
+
+    <div id="board" class="board" aria-label="Tic Tac Toe board">
+      <div class="cell" data-index="0"></div>
+      <div class="cell" data-index="1"></div>
+      <div class="cell" data-index="2"></div>
+      <div class="cell" data-index="3"></div>
+      <div class="cell" data-index="4"></div>
+      <div class="cell" data-index="5"></div>
+      <div class="cell" data-index="6"></div>
+      <div class="cell" data-index="7"></div>
+      <div class="cell" data-index="8"></div>
+    </div>
+
+    <div class="info" id="info">Player X's turn</div>
+    <div>
+      <button id="restart">Restart</button>
+      <button id="reset" class="secondary">Clear Proof Link</button>
+    </div>
+
+    <footer>Positions: 1-9 left→right, top→down.</footer>
+  </div>
+
+<script>
+(function(){
+  const boardEl = document.getElementById('board');
+  const infoEl = document.getElementById('info');
+  const restartBtn = document.getElementById('restart');
+  const resetBtn = document.getElementById('reset');
+  const proofAnchor = document.querySelector('a.proof');
+  let board = Array(9).fill('');
+  let current = 'X';
+  let finished = false;
+
+  const wins = [
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
+
+  function render(){
+    document.querySelectorAll('.cell').forEach(cell => {
+      const i = +cell.dataset.index;
+      cell.textContent = board[i];
+    });
+    if(finished) return;
+    infoEl.textContent = `Player ${current}'s turn`;
+  }
+
+  function checkWinner(){
+    for(const combo of wins){
+      const [a,b,c] = combo;
+      if(board[a] && board[a] === board[b] && board[a] === board[c]){
+        return board[a];
+      }
+    }
+    if(board.every(Boolean)) return 'draw';
+    return null;
+  }
+
+  boardEl.addEventListener('click', (e) => {
+    if(finished) return;
+    const cell = e.target.closest('.cell');
+    if(!cell) return;
+    const idx = +cell.dataset.index;
+    if(board[idx]) return;
+    board[idx] = current;
+    const result = checkWinner();
+    if(result === 'X' || result === 'O'){
+      finished = true;
+      infoEl.textContent = `🎉 Player ${result} wins!`;
+      highlightWinner(result);
+    } else if(result === 'draw'){
+      finished = true;
+      infoEl.textContent = "It's a draw!";
+    } else {
+      current = current === 'X' ? 'O' : 'X';
+      infoEl.textContent = `Player ${current}'s turn`;
+    }
+    render();
+  });
+
+  function highlightWinner(player){
+    for(const combo of wins){
+      const [a,b,c] = combo;
+      if(board[a] === player && board[b] === player && board[c] === player){
+        [a,b,c].forEach(i => {
+          const el = document.querySelector('.cell[data-index="'+i+'"]');
+          if(el) el.style.background = '#d1fae5';
+        });
+        break;
+      }
+    }
+  }
+
+  restartBtn.addEventListener('click', ()=>{
+    board = Array(9).fill('');
+    current = 'X';
+    finished = false;
+    document.querySelectorAll('.cell').forEach(c => c.style.background = '');
+    infoEl.textContent = `Player ${current}'s turn`;
+    render();
+  });
+
+  resetBtn.addEventListener('click', ()=>{
+    proofAnchor.textContent = 'proof link hidden (file still contains original link)';
+    proofAnchor.href = '#';
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if(finished) return;
+    if(e.key >= '1' && e.key <= '9'){
+      const idx = parseInt(e.key,10) - 1;
+      if(!board[idx]){
+        board[idx] = current;
+        const result = checkWinner();
+        if(result === 'X' || result === 'O'){
+          finished = true;
+          infoEl.textContent = `🎉 Player ${result} wins!`;
+          highlightWinner(result);
+        } else if(result === 'draw'){
+          finished = true;
+          infoEl.textContent = "It's a draw!";
+        } else {
+          current = current === 'X' ? 'O' : 'X';
+          infoEl.textContent = `Player ${current}'s turn`;
+        }
+        render();
+      }
+    }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
