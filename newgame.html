@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tic Tac Toe — Colorful Edition</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      background: linear-gradient(270deg, #ff6ec4, #7873f5, #4ade80, #facc15);
+      background-size: 800% 800%;
+      animation: bgShift 12s ease infinite;
+      color:#111;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
+      margin:0;
+    }
+    @keyframes bgShift {
+      0% {background-position:0% 50%;}
+      50% {background-position:100% 50%;}
+      100% {background-position:0% 50%;}
+    }
+    .container {
+      width:380px;
+      max-width:94vw;
+      background:rgba(255,255,255,0.9);
+      padding:22px;
+      border-radius:20px;
+      box-shadow:0 10px 28px rgba(0,0,0,0.2);
+      text-align:center;
+      animation: fadeIn 1.2s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity:0; transform:scale(0.9);}
+      to { opacity:1; transform:scale(1);}
+    }
+    h1 { font-size:22px; margin:0 0 10px 0; color:#1f2937;}
+    p.link { font-size:12px; margin:6px 0 14px 0; color:#444; word-break:break-all; }
+    .board {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      margin:14px 0;
+    }
+    .cell {
+      background:#f9fafb;
+      aspect-ratio:1/1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:44px;
+      cursor:pointer;
+      border-radius:14px;
+      user-select:none;
+      transition: all 0.35s ease;
+      font-weight:bold;
+    }
+    .cell:hover {
+      background:linear-gradient(135deg,#f472b6,#60a5fa,#34d399);
+      color:#fff;
+      transform:rotate(5deg) scale(1.1);
+    }
+    .cell span {
+      opacity:0;
+      transform:scale(0.6);
+      display:inline-block;
+      animation: popIn 0.4s forwards;
+    }
+    @keyframes popIn {
+      to { opacity:1; transform:scale(1);}
+    }
+    .winner {
+      background:linear-gradient(135deg,#f87171,#facc15,#34d399,#60a5fa);
+      background-size:400% 400%;
+      animation: rainbowPulse 2s infinite alternate;
+      color:#fff !important;
+    }
+    @keyframes rainbowPulse {
+      0% { background-position:0% 50%; box-shadow:0 0 8px #f87171; }
+      50% { background-position:100% 50%; box-shadow:0 0 20px #34d399; }
+      100% { background-position:0% 50%; box-shadow:0 0 28px #60a5fa; }
+    }
+    .info { 
+      margin:10px 0; 
+      font-size:16px; 
+      min-height:24px; 
+      font-weight:600;
+      animation: fadeMessage 0.5s ease;
+    }
+    @keyframes fadeMessage {
+      from { opacity:0; transform:translateY(-5px);}
+      to { opacity:1; transform:translateY(0);}
+    }
+    button {
+      background:#2563eb;
+      color:#fff;
+      border:none;
+      padding:10px 14px;
+      border-radius:10px;
+      cursor:pointer;
+      transition:all 0.3s ease;
+      font-size:14px;
+    }
+    button:hover { background:#1e40af; transform:scale(1.05);}
+    button.secondary {
+      background:#e6e6e6; color:#111; margin-left:8px;
+    }
+    footer { margin-top:12px; font-size:12px; color:#666; }
+    a.proof { color:#0b5ed7; text-decoration:none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🌈 Tic Tac Toe — Colorful Edition</h1>
+    <p class="link">Created with AI — proof link:<br>
+      <a class="proof" href="https://chatgpt.com/share/68c8dae6-3614-8013-b2b0-c0b25ed47f84" target="_blank">
+        https://chatgpt.com/share/68c8dae6-3614-8013-b2b0-c0b25ed47f84
+      </a>
+    </p>
+
+    <div id="board" class="board" aria-label="Tic Tac Toe board">
+      <div class="cell" data-index="0"></div>
+      <div class="cell" data-index="1"></div>
+      <div class="cell" data-index="2"></div>
+      <div class="cell" data-index="3"></div>
+      <div class="cell" data-index="4"></div>
+      <div class="cell" data-index="5"></div>
+      <div class="cell" data-index="6"></div>
+      <div class="cell" data-index="7"></div>
+      <div class="cell" data-index="8"></div>
+    </div>
+
+    <div class="info" id="info">Player X's turn</div>
+    <div>
+      <button id="restart">Restart</button>
+      <button id="reset" class="secondary">Clear Proof Link</button>
+    </div>
+
+    <footer>Positions: 1-9 left→right, top→down.</footer>
+  </div>
+
+<script>
+(function(){
+  const boardEl = document.getElementById('board');
+  const infoEl = document.getElementById('info');
+  const restartBtn = document.getElementById('restart');
+  const resetBtn = document.getElementById('reset');
+  const proofAnchor = document.querySelector('a.proof');
+
+  let board = Array(9).fill('');
+  let current = 'X';
+  let finished = false;
+
+  // sounds
+  const clickSound = new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
+  const winSound = new Audio("https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg");
+  const drawSound = new Audio("https://actions.google.com/sounds/v1/cartoon/pop.ogg");
+
+  const wins = [
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
+
+  function render(){
+    document.querySelectorAll('.cell').forEach(cell => {
+      const i = +cell.dataset.index;
+      cell.innerHTML = board[i] ? `<span>${board[i]}</span>` : '';
+    });
+    if(!finished){
+      infoEl.textContent = `Player ${current}'s turn`;
+    }
+  }
+
+  function checkWinner(){
+    for(const combo of wins){
+      const [a,b,c] = combo;
+      if(board[a] && board[a] === board[b] && board[a] === board[c]){
+        return {winner: board[a], combo};
+      }
+    }
+    if(board.every(Boolean)) return {winner:'draw'};
+    return null;
+  }
+
+  boardEl.addEventListener('click', (e) => {
+    if(finished) return;
+    const cell = e.target.closest('.cell');
+    if(!cell) return;
+    const idx = +cell.dataset.index;
+    if(board[idx]) return;
+    board[idx] = current;
+    clickSound.play();
+    const result = checkWinner();
+    if(result){
+      finished = true;
+      if(result.winner === 'draw'){
+        infoEl.textContent = "🤝 It's a draw!";
+        drawSound.play();
+      } else {
+        infoEl.textContent = `🎉 Player ${result.winner} wins!`;
+        winSound.play();
+        highlightWinner(result.combo);
+      }
+    } else {
+      current = current === 'X' ? 'O' : 'X';
+      infoEl.textContent = `Player ${current}'s turn`;
+    }
+    render();
+  });
+
+  function highlightWinner(combo){
+    combo.forEach(i => {
+      const el = document.querySelector('.cell[data-index="'+i+'"]');
+      if(el) el.classList.add('winner');
+    });
+  }
+
+  restartBtn.addEventListener('click', ()=>{
+    board = Array(9).fill('');
+    current = 'X';
+    finished = false;
+    document.querySelectorAll('.cell').forEach(c => {
+      c.classList.remove('winner');
+    });
+    infoEl.textContent = `Player ${current}'s turn`;
+    render();
+  });
+
+  resetBtn.addEventListener('click', ()=>{
+    proofAnchor.textContent = 'proof link hidden (file still contains original link)';
+    proofAnchor.href = '#';
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if(finished) return;
+    if(e.key >= '1' && e.key <= '9'){
+      const idx = parseInt(e.key,10) - 1;
+      if(!board[idx]){
+        board[idx] = current;
+        clickSound.play();
+        const result = checkWinner();
+        if(result){
+          finished = true;
+          if(result.winner === 'draw'){
+            infoEl.textContent = "🤝 It's a draw!";
+            drawSound.play();
+          } else {
+            infoEl.textContent = `🎉 Player ${result.winner} wins!`;
+            winSound.play();
+            highlightWinner(result.combo);
+          }
+        } else {
+          current = current === 'X' ? 'O' : 'X';
+          infoEl.textContent = `Player ${current}'s turn`;
+        }
+        render();
+      }
+    }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
