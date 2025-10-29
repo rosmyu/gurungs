@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rosmi Gurung | Portfolio</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #1f1c2c, #928dab);
+      color: #fff;
+      line-height: 1.6;
+    }
+
+    header {
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+
+    header h1 {
+      font-size: 2.8rem;
+      margin-bottom: 0.5rem;
+      color: #ffd369;
+    }
+
+    header p {
+      font-size: 1.2rem;
+      opacity: 0.85;
+    }
+
+    section {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2rem;
+      color: #ffdd59;
+      position: relative;
+    }
+
+    h2::after {
+      content: "";
+      display: block;
+      width: 60px;
+      height: 4px;
+      background: #ff6b6b;
+      margin: 0.5rem auto 0;
+      border-radius: 2px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 1.8rem;
+      text-align: center;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card h3 {
+      margin-bottom: 0.8rem;
+      font-size: 1.3rem;
+      color: #ffd369;
+    }
+
+    .card a {
+      display: inline-block;
+      margin-top: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      background: #ff6b6b;
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+
+    .card a:hover {
+      background: #ff4757;
+    }
+
+    .about-content {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      text-align: center;
+    }
+
+    .about-content p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .contact-grid a {
+      display: inline-block;
+      margin-top: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      background: #1e90ff;
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+
+    .contact-grid a:hover {
+      background: #0077ff;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Rosmi Gurung</h1>
+    <p>Student | Developer | Game Creator</p>
+  </header>
+
+  <!-- About Section -->
+  <section id="about">
+    <h2>About Me</h2>
+    <div class="card about-content">
+      <p>Hello! 👋 I’m <b>Rosmi Gurung</b>, a passionate student and aspiring developer. I enjoy building projects, especially browser-based games, and love exploring how technology can make ideas come alive. My goal is to keep learning, experimenting, and sharing my creativity with the world.</p>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section id="projects">
+    <h2>My Projects</h2>
+    <div class="projects-grid">
+      <div class="card">
+        <h3>Old Game</h3>
+        <p>A fun browser game I built earlier to practice my skills.</p>
+        <a href="https://rosmyu.github.io/gurungs/game.html" target="_blank" rel="noopener noreferrer">Play Now</a>
+      </div>
+
+      <div class="card">
+        <h3>New Game</h3>
+        <p>My latest creation with improved design and mechanics.</p>
+        <a href="https://rosmyu.github.io/gurungs/newgame.html" target="_blank" rel="noopener noreferrer">Play Now</a>
+      </div>
+
+      <div class="card">
+        <h3>Game Improvement Prompt</h3>
+        <p>A document with ideas and improvements planned for my game development journey.</p>
+        <a href="https://docs.google.com/document/d/1nsldvafEasAs1odu6yjx_gaDL2uRLuM8/edit?usp=drivesdk&ouid=103268050792898062417&rtpof=true&sd=true" target="_blank" rel="noopener noreferrer">View Document</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- New Project Section -->
+  <section id="new-projects">
+    <h2>New Project</h2>
+    <div class="projects-grid">
+      <div class="card">
+        <h3>Programming Fundamentals Exercise</h3>
+        <p>This project showcases my solutions and coding exercises completed in Google Colab for my Programming Fundamentals course.</p>
+        <a href="https://colab.research.google.com/drive/1AgPoxQqenIvbOX2WfuW8KjDaghrcL9vw" target="_blank" rel="noopener noreferrer">View Project</a>
+      </div>
+
+      <div class="card">
+        <h3>My Learning Journey</h3>
+        <p>A shared interactive record of my entire learning journey, reflecting my growth and progress in coding and creativity.</p>
+        <a href="https://g.co/gemini/share/201a6458b588" target="_blank" rel="noopener noreferrer">View Learning Journey</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact">
+    <h2>Contact</h2>
+    <div class="contact-grid">
+      <div class="card">
+        <h3>Email</h3>
+        <p>rosmi@example.com</p>
+        <a href="mailto:rosmi@example.com">Send Email</a>
+      </div>
+      <div class="card">
+        <h3>GitHub</h3>
+        <p>@rosmyu</p>
+        <a href="https://github.com/rosmyu" target="_blank" rel="noopener noreferrer">View GitHub</a>
+      </div>
+      <div class="card">
+        <h3>Portfolio</h3>
+        <p>rosmyu.github.io/gurungs</p>
+        <a href="https://rosmyu.github.io/gurungs/" target="_blank" rel="noopener noreferrer">Visit Site</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 Rosmi Gurung. Built with ❤️ and creativity.</p>
+  </footer>
+</body>
+</html>
